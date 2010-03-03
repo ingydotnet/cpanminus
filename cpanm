@@ -131,8 +131,13 @@ sub doit {
 
 sub should_init {
     my $self = shift;
-    my $action = $self->{action} or return 1;
-    return (grep $action eq $_, qw(help version)) ? 0 : 1;
+    my $action = $self->{action};
+    # 'cpanm'
+    return 0 if not @{$self->{argv}} and not $action;
+    # 'cpanm -h' or 'cpanm --version'
+    return 0 if grep $action eq $_, qw(help version);
+    # any other invocation
+    return 1;
 }
 
 sub setup_home {
